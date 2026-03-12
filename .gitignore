@@ -4,33 +4,59 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
 venv/
+env/
+ENV/
+.venv
 *.egg-info/
 dist/
 build/
 
 # Node
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 dist/
 .cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+.DS_Store
 
-# Uploads
-uploads/
+# Video files and uploads
+backend/uploads/
+backend/frames/
+backend/audio/
 *.mp4
 *.avi
 *.mov
+*.mkv
+*.mp3
+*.wav
 
-# Environment
-.env
-.env.local
+# Database
+*.db
+*.sqlite
+postgres_data/
+qdrant_data/
 
-# OS
-.DS_Store
-Thumbs.db
+# Logs
+*.log
+logs/
+
+# Model cache
+.cache/
+models/
+*.pth
+*.pt
