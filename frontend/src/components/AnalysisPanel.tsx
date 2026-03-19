@@ -26,23 +26,29 @@ const AnalysisPanel: React.FC<Props> = ({ videoId, onAnalysisComplete }) => {
       console.log('Objects:', objectsRes.data)
       console.log('Emotions:', emotionsRes.data)
       
-      setScenes(scenesRes.data.scenes || [])
-      setObjects(objectsRes.data.objects || [])
-      setEmotions(emotionsRes.data.emotions || [])
+      const newScenes = scenesRes.data.scenes || []
+      const newObjects = objectsRes.data.objects || []
+      const newEmotions = emotionsRes.data.emotions || []
       
-      console.log('State updated - Scenes:', scenesRes.data.scenes?.length, 'Objects:', objectsRes.data.objects?.length, 'Emotions:', emotionsRes.data.emotions?.length)
+      console.log('Setting state - Scenes:', newScenes.length, 'Objects:', newObjects.length, 'Emotions:', newEmotions.length)
       
-      // Wait a moment for database to fully commit, then notify parent
+      // Update all state together, then turn off loading
+      setScenes(newScenes)
+      setObjects(newObjects)
+      setEmotions(newEmotions)
+      
+      // Use setTimeout to ensure state updates have been processed
       setTimeout(() => {
-        console.log('Triggering timeline refresh after analysis')
+        setLoading(false)
+        console.log('Loading set to false, triggering timeline refresh')
         if (onAnalysisComplete) {
           onAnalysisComplete()
         }
-      }, 300)
+      }, 100)
+      
     } catch (err) {
       console.error('Analysis failed:', err)
       alert('Analysis failed. Check console for details.')
-    } finally {
       setLoading(false)
     }
   }

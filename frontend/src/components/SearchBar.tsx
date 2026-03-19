@@ -12,15 +12,21 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
   const [results, setResults] = useState<any[]>([])
   const [searching, setSearching] = useState(false)
   const [indexing, setIndexing] = useState(false)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   const handleIndex = async () => {
     setIndexing(true)
     try {
       await axios.post(`${API_URL}/api/search/index`, { video_id: videoId })
-      alert('Video indexed for search! You can now search.')
+      showToast('Video indexed for search! You can now search.', 'success')
     } catch (error) {
       console.error('Indexing failed:', error)
-      alert('Indexing failed. Make sure Qdrant is running.')
+      showToast('Indexing failed. Make sure Qdrant is running.', 'error')
     } finally {
       setIndexing(false)
     }
@@ -41,7 +47,7 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
       setResults(response.data.results || [])
     } catch (error) {
       console.error('Search failed:', error)
-      alert('Search failed. Make sure video is indexed.')
+      showToast('Search failed. Make sure video is indexed.', 'error')
     } finally {
       setSearching(false)
     }
@@ -61,6 +67,15 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
 
   return (
     <div className="panel search-panel">
+      {toast && (
+        <div className={`toast toast-${toast.type}`}>
+          <div className="toast-icon">
+            {toast.type === 'success' ? '✓' : '✕'}
+          </div>
+          <span>{toast.message}</span>
+        </div>
+      )}
+      
       <h3>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
@@ -135,6 +150,60 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
           background: #1a1f2e;
           border: none;
           border-radius: 0;
+          position: relative;
+        }
+        
+        .toast {
+          position: absolute;
+          top: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 12px 20px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          z-index: 1000;
+          animation: slideDown 0.3s ease-out;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          min-width: 280px;
+        }
+        
+        .toast-success {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          color: white;
+          border: 1px solid #34d399;
+        }
+        
+        .toast-error {
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+          color: white;
+          border: 1px solid #f87171;
+        }
+        
+        .toast-icon {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 1rem;
+        }
+        
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
         }
         
         .search-panel h3 {
