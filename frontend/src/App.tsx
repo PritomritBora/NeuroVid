@@ -29,6 +29,11 @@ function App() {
     }
   }
 
+  const handleTimeChange = (time: number) => {
+    console.log('App: Setting currentTime to', time)
+    setCurrentTime(time)
+  }
+
   if (!showApp) {
     return <LandingPage onGetStarted={() => setShowApp(true)} />
   }
@@ -37,7 +42,7 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <div className="header-content">
-          <h1>🎬 AI Video Intelligence</h1>
+          <h1>🎬 NeuroVid</h1>
           {videoId && (
             <button className="new-video-btn" onClick={() => handleVideoIdChange(null)}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -52,16 +57,22 @@ function App() {
       {!videoId ? (
         <VideoUpload onUploadSuccess={handleVideoIdChange} />
       ) : (
-        <div className="main-content">
-          <div className="left-panel">
-            <SearchBar videoId={videoId} onResultClick={setCurrentTime} />
-            <VideoPlayer videoId={videoId} currentTime={currentTime} onTimeUpdate={setCurrentTime} />
-            <Timeline videoId={videoId} onTimelineClick={setCurrentTime} />
+        <div className="editor-layout">
+          {/* Left Sidebar - Search & Analysis */}
+          <div className="left-sidebar">
+            <SearchBar videoId={videoId} onResultClick={handleTimeChange} />
+            <AnalysisPanel videoId={videoId} />
           </div>
           
-          <div className="right-panel">
-            <AnalysisPanel videoId={videoId} />
-            <TranscriptView videoId={videoId} currentTime={currentTime} onTranscriptClick={setCurrentTime} />
+          {/* Center - Video Player (Fixed) */}
+          <div className="center-panel">
+            <VideoPlayer videoId={videoId} currentTime={currentTime} onTimeUpdate={handleTimeChange} />
+            <Timeline videoId={videoId} onTimelineClick={handleTimeChange} />
+          </div>
+          
+          {/* Right Sidebar - Transcript */}
+          <div className="right-sidebar">
+            <TranscriptView videoId={videoId} currentTime={currentTime} onTranscriptClick={handleTimeChange} />
           </div>
         </div>
       )}

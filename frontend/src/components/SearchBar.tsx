@@ -132,28 +132,33 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
       
       <style>{`
         .search-panel {
-          background: linear-gradient(135deg, #f0f9ff 0%, #fce7f3 100%);
-          border: 2px solid #e0f2fe;
+          background: #1a1f2e;
+          border: none;
+          border-radius: 0;
+        }
+        
+        .search-panel h3 {
+          color: #9ca3af !important;
+          opacity: 1 !important;
         }
         
         .index-btn {
           width: 100%;
           padding: 10px;
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-          color: white;
-          border: none;
-          border-radius: 12px;
-          font-size: 0.9rem;
+          background: #2d3748;
+          color: #10b981;
+          border: 1px solid #10b981;
+          border-radius: 6px;
+          font-size: 0.85rem;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.3s;
+          transition: all 0.2s;
           margin-bottom: 15px;
-          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
         }
         
         .index-btn:hover:not(:disabled) {
-          transform: scale(1.02);
-          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+          background: #10b981;
+          color: white;
         }
         
         .index-btn:disabled {
@@ -169,60 +174,57 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
           position: relative;
           display: flex;
           align-items: center;
-          background: #ffffff;
-          border: 2px solid #e2e8f0;
-          border-radius: 18px;
-          padding: 6px;
-          transition: all 0.3s;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+          background: #0f1419;
+          border: 1px solid #2d3748;
+          border-radius: 6px;
+          padding: 4px;
+          transition: all 0.2s;
         }
         
         .search-input-container:focus-within {
           border-color: #0ea5e9;
-          box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
         }
         
         .search-icon {
           position: absolute;
-          left: 20px;
-          color: #94a3b8;
+          left: 16px;
+          color: #6b7280;
           pointer-events: none;
         }
         
         .search-input {
           flex: 1;
-          padding: 16px 22px 16px 54px;
+          padding: 12px 16px 12px 48px;
           background: transparent;
           border: none;
-          color: #1a202c;
-          font-size: 1rem;
+          color: #e4e7eb;
+          font-size: 0.9rem;
           outline: none;
-          font-weight: 500;
+          font-weight: 400;
         }
         
         .search-input::placeholder {
-          color: #94a3b8;
+          color: #6b7280;
         }
         
         .search-btn {
-          padding: 14px 28px;
-          background: linear-gradient(135deg, #0ea5e9 0%, #ec4899 100%);
+          padding: 10px 20px;
+          background: #0ea5e9;
           border: none;
-          border-radius: 14px;
+          border-radius: 6px;
           color: white;
           cursor: pointer;
-          transition: all 0.3s;
+          transition: all 0.2s;
           display: flex;
           align-items: center;
           justify-content: center;
-          min-width: 70px;
+          min-width: 60px;
           font-weight: 600;
-          box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+          font-size: 0.85rem;
         }
         
         .search-btn:hover:not(:disabled) {
-          transform: scale(1.05);
-          box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+          background: #0284c7;
         }
         
         .search-btn:disabled {
@@ -262,20 +264,17 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         }
         
         .search-result {
-          padding: 18px;
-          background: #ffffff;
-          border: 2px solid #e2e8f0;
-          border-radius: 14px;
+          padding: 14px;
+          background: #0f1419;
+          border: 1px solid #2d3748;
+          border-radius: 6px;
           cursor: pointer;
-          transition: all 0.3s;
-          animation: slideIn 0.3s ease;
+          transition: all 0.2s;
         }
         
         .search-result:hover {
-          background: #f8fafc;
+          background: #2d3748;
           border-color: #0ea5e9;
-          transform: translateX(6px);
-          box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
         }
         
         .result-header {
@@ -305,10 +304,10 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         }
         
         .result-text {
-          color: #475569;
-          font-size: 0.95rem;
-          line-height: 1.6;
-          font-weight: 500;
+          color: #9ca3af;
+          font-size: 0.85rem;
+          line-height: 1.5;
+          font-weight: 400;
         }
         
         @keyframes slideIn {

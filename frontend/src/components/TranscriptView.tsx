@@ -85,10 +85,15 @@ const TranscriptView: React.FC<Props> = ({ videoId, currentTime, onTranscriptCli
       
       <style>{`
         .transcript-panel {
-          max-height: 600px;
+          max-height: none;
           overflow-y: auto;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
+          background: #1a1f2e;
+          backdrop-filter: none;
+        }
+        
+        .transcript-panel h3 {
+          color: #9ca3af !important;
+          opacity: 1 !important;
         }
         
         .transcript-list {
@@ -99,40 +104,42 @@ const TranscriptView: React.FC<Props> = ({ videoId, currentTime, onTranscriptCli
         
         .transcript-segment {
           padding: 12px;
-          background: rgba(0, 0, 0, 0.05);
-          border-radius: 8px;
+          background: #0f1419;
+          border: 1px solid #2d3748;
+          border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s;
-          border-left: 3px solid transparent;
         }
         
         .transcript-segment:hover {
-          background: rgba(0, 0, 0, 0.1);
-          transform: translateX(5px);
+          background: #2d3748;
+          border-color: #0ea5e9;
         }
         
         .transcript-segment.active {
-          background: rgba(102, 126, 234, 0.15);
-          border-left-color: #667eea;
+          background: #1e3a5f;
+          border-color: #0ea5e9;
         }
         
         .timestamp {
-          font-size: 0.85rem;
-          color: #667eea;
+          font-size: 0.75rem;
+          color: #0ea5e9;
           font-weight: 600;
           display: block;
-          margin-bottom: 5px;
+          margin-bottom: 6px;
         }
         
         .text {
-          color: #1a202c;
-          line-height: 1.5;
+          color: #e4e7eb;
+          line-height: 1.6;
+          font-size: 0.9rem;
         }
         
         .empty-state {
           text-align: center;
-          color: #64748b;
+          color: #6b7280;
           padding: 40px 20px;
+          font-size: 0.9rem;
         }
       `}</style>
     </div>

@@ -123,26 +123,31 @@ const AnalysisPanel: React.FC<Props> = ({ videoId }) => {
       
       <style>{`
         .analysis-panel {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
+          background: #1a1f2e;
+          backdrop-filter: none;
+        }
+        
+        .analysis-panel h3 {
+          color: #9ca3af !important;
+          opacity: 1 !important;
         }
         
         .analyze-btn {
           width: 100%;
           padding: 12px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #0ea5e9;
           color: white;
           border: none;
-          border-radius: 8px;
-          font-size: 1rem;
+          border-radius: 6px;
+          font-size: 0.9rem;
           font-weight: 600;
           cursor: pointer;
-          transition: transform 0.2s;
+          transition: all 0.2s;
           margin-bottom: 20px;
         }
         
         .analyze-btn:hover:not(:disabled) {
-          transform: translateY(-2px);
+          background: #0284c7;
         }
         
         .analyze-btn:disabled {
@@ -162,14 +167,16 @@ const AnalysisPanel: React.FC<Props> = ({ videoId }) => {
         }
         
         .analysis-section h4 {
-          color: #1a202c;
-          margin-bottom: 10px;
-          font-size: 1rem;
+          color: #e4e7eb;
+          margin-bottom: 12px;
+          font-size: 0.9rem;
+          font-weight: 600;
         }
         
         .analysis-section p {
-          color: #64748b;
+          color: #6b7280;
           margin: 5px 0;
+          font-size: 0.85rem;
         }
         
         .analysis-list {
@@ -179,11 +186,13 @@ const AnalysisPanel: React.FC<Props> = ({ videoId }) => {
         .analysis-list li {
           display: flex;
           justify-content: space-between;
-          padding: 8px 12px;
-          background: rgba(0, 0, 0, 0.05);
+          padding: 10px 12px;
+          background: #0f1419;
+          border: 1px solid #2d3748;
           border-radius: 6px;
           margin-bottom: 6px;
-          color: #1a202c;
+          color: #e4e7eb;
+          font-size: 0.85rem;
         }
         
         .label {

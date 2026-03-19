@@ -43,7 +43,10 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick }) => {
               <div 
                 key={idx} 
                 className="timeline-event"
-                onClick={() => onTimelineClick(event.timestamp)}
+                onClick={() => {
+                  console.log('Timeline clicked:', event.timestamp, 'Event:', event)
+                  onTimelineClick(event.timestamp)
+                }}
               >
                 <div className="event-icon">{getEventIcon(event.type)}</div>
                 <div className="event-content">
@@ -58,38 +61,48 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick }) => {
       
       <style>{`
         .timeline-panel {
-          max-height: 400px;
+          background: #1a1f2e;
+          border-radius: 0;
           overflow-y: auto;
+          max-height: none;
+        }
+        
+        .timeline-panel h3 {
+          color: #9ca3af !important;
+          opacity: 1 !important;
         }
         
         .timeline-container {
-          margin-top: 15px;
+          margin-top: 0;
         }
         
         .timeline-events {
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 8px;
         }
         
         .timeline-event {
           display: flex;
           gap: 12px;
           padding: 12px;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 8px;
+          background: #0f1419;
+          border: 1px solid #2d3748;
+          border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s;
         }
         
         .timeline-event:hover {
-          background: rgba(255, 255, 255, 0.1);
-          transform: translateX(5px);
+          background: #2d3748;
+          border-color: #0ea5e9;
+          transform: translateX(3px);
         }
         
         .event-icon {
-          font-size: 1.5rem;
+          font-size: 1.3rem;
           flex-shrink: 0;
+          opacity: 0.8;
         }
         
         .event-content {
@@ -97,17 +110,24 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick }) => {
         }
         
         .event-time {
-          color: #667eea;
+          color: #0ea5e9;
           font-weight: 600;
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           display: block;
           margin-bottom: 4px;
         }
         
         .event-description {
-          color: white;
-          font-size: 0.9rem;
+          color: #9ca3af;
+          font-size: 0.85rem;
           line-height: 1.4;
+        }
+        
+        .empty-state {
+          color: #6b7280;
+          text-align: center;
+          padding: 20px;
+          font-size: 0.9rem;
         }
       `}</style>
     </div>
