@@ -83,14 +83,24 @@ async def get_timeline(video_id: str, db: Session = Depends(get_db)):
 
 @router.get("/{video_id}/stream")
 async def stream_video(video_id: str, db: Session = Depends(get_db)):
-    """Stream video file"""
+    """Stream video file with range request support for seeking"""
     from fastapi.responses import FileResponse
+    from fastapi import Request
     
     video = await video_processor.get_video(video_id, db)
     if not video:
         raise HTTPException(status_code=404, detail="Video not found")
     
-    if not Path(video.filepath).exists():
+    video_path = Path(video.filepath)
+    if not video_path.exists():
         raise HTTPException(status_code=404, detail="Video file not found")
     
-    return FileResponse(video.filepath, media_type="video/mp4")
+    # FileResponse automatically handles range requests for video seeking
+    return FileResponse(
+        video_path, 
+        media_type="video/mp4",
+        headers={
+            "Accept-Ranges": "bytes",
+            "Cache-Control": "no-cache"
+        }
+    )
