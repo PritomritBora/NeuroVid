@@ -126,7 +126,7 @@ const VideoUpload: React.FC<Props> = ({ onUploadSuccess }) => {
                 </svg>
                 <div className="progress-text">{progress}%</div>
               </div>
-              <p className="upload-status">Processing your video...</p>
+              <p className="upload-status">Uploading your video...</p>
             </div>
           )}
         </div>
@@ -336,6 +336,50 @@ const VideoUpload: React.FC<Props> = ({ onUploadSuccess }) => {
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.6; }
+        }
+        
+        .processing-spinner {
+          width: 130px;
+          height: 130px;
+          margin: 0 auto 25px;
+        }
+        
+        .spinner-svg {
+          width: 100%;
+          height: 100%;
+          animation: rotate 2s linear infinite;
+        }
+        
+        .spinner-circle {
+          fill: none;
+          stroke: url(#gradient);
+          stroke-width: 4;
+          stroke-linecap: round;
+          stroke-dasharray: 1, 200;
+          stroke-dashoffset: 0;
+          animation: dash 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes dash {
+          0% {
+            stroke-dasharray: 1, 200;
+            stroke-dashoffset: 0;
+          }
+          50% {
+            stroke-dasharray: 100, 200;
+            stroke-dashoffset: -35;
+          }
+          100% {
+            stroke-dasharray: 100, 200;
+            stroke-dashoffset: -125;
+          }
+        }
+        
+        .processing-note {
+          color: #94a3b8;
+          font-size: 0.9rem;
+          margin-top: 8px;
+          font-style: italic;
         }
       `}</style>
       
