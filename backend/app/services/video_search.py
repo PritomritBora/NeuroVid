@@ -29,8 +29,13 @@ class VideoSearch:
     
     async def index_video(self, video_id: str, db: Session):
         """Index video frames and transcript into vector database"""
+        # Refresh session to see latest data
+        db.expire_all()
+        
         # Index transcript segments
         transcripts = db.query(Transcript).filter(Transcript.video_id == video_id).all()
+        
+        print(f"Found {len(transcripts)} transcripts to index for video {video_id}")
         
         points = []
         for transcript in transcripts:
@@ -62,8 +67,9 @@ class VideoSearch:
                 points=points
             )
             db.commit()
-        
-        print(f"Indexed {len(points)} embeddings for video {video_id}")
+            print(f"✅ Successfully indexed {len(points)} embeddings for video {video_id}")
+        else:
+            print(f"⚠️ No transcripts found to index for video {video_id}")
     
     async def query(self, video_id: str, query: str, db: Session, limit: int = 5) -> List[Dict]:
         """Search video content with natural language query"""

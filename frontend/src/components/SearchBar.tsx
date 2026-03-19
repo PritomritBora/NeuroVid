@@ -11,6 +11,20 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<any[]>([])
   const [searching, setSearching] = useState(false)
+  const [indexing, setIndexing] = useState(false)
+
+  const handleIndex = async () => {
+    setIndexing(true)
+    try {
+      await axios.post(`${API_URL}/api/search/index`, { video_id: videoId })
+      alert('Video indexed for search! You can now search.')
+    } catch (error) {
+      console.error('Indexing failed:', error)
+      alert('Indexing failed. Make sure Qdrant is running.')
+    } finally {
+      setIndexing(false)
+    }
+  }
 
   const handleSearch = async () => {
     if (!query.trim()) return
@@ -21,9 +35,13 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         video_id: videoId,
         query
       })
-      setResults(response.data.results)
+      console.log('Search response:', response.data)
+      console.log('Search results:', response.data.results)
+      console.log('Results length:', response.data.results?.length)
+      setResults(response.data.results || [])
     } catch (error) {
       console.error('Search failed:', error)
+      alert('Search failed. Make sure video is indexed.')
     } finally {
       setSearching(false)
     }
@@ -50,6 +68,10 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         </svg>
         Semantic Search
       </h3>
+      
+      <button onClick={handleIndex} disabled={indexing} className="index-btn">
+        {indexing ? 'Indexing...' : '🔄 Index for Search'}
+      </button>
       
       <div className="search-input-wrapper">
         <div className="search-input-container">
@@ -112,6 +134,31 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         .search-panel {
           background: linear-gradient(135deg, #f0f9ff 0%, #fce7f3 100%);
           border: 2px solid #e0f2fe;
+        }
+        
+        .index-btn {
+          width: 100%;
+          padding: 10px;
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s;
+          margin-bottom: 15px;
+          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+        
+        .index-btn:hover:not(:disabled) {
+          transform: scale(1.02);
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .index-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
         
         .search-input-wrapper {
