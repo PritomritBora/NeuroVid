@@ -19,6 +19,7 @@ function App() {
     return !!localStorage.getItem('currentVideoId')
   })
   const [timelineRefreshTrigger, setTimelineRefreshTrigger] = useState<number>(0)
+  const [searchHighlights, setSearchHighlights] = useState<number[]>([])
 
   // Save video ID to localStorage when it changes
   const handleVideoIdChange = (id: string | null) => {
@@ -38,6 +39,13 @@ function App() {
   const handleAnalysisComplete = () => {
     console.log('Analysis complete callback received, refreshing timeline')
     setTimelineRefreshTrigger(prev => prev + 1)
+  }
+
+  const handleSearchResults = (results: any[]) => {
+    // Extract timestamps from search results for timeline highlighting
+    const timestamps = results.map(r => r.timestamp)
+    console.log('Search results timestamps for highlighting:', timestamps)
+    setSearchHighlights(timestamps)
   }
 
   if (!showApp) {
@@ -66,14 +74,19 @@ function App() {
         <div className="editor-layout">
           {/* Left Sidebar - Search & Analysis */}
           <div className="left-sidebar">
-            <SearchBar videoId={videoId} onResultClick={handleTimeChange} />
+            <SearchBar videoId={videoId} onResultClick={handleTimeChange} onSearchResults={handleSearchResults} />
             <AnalysisPanel videoId={videoId} onAnalysisComplete={handleAnalysisComplete} />
           </div>
           
           {/* Center - Video Player (Fixed) */}
           <div className="center-panel">
             <VideoPlayer videoId={videoId} currentTime={currentTime} onTimeUpdate={handleTimeChange} />
-            <Timeline videoId={videoId} onTimelineClick={handleTimeChange} refreshTrigger={timelineRefreshTrigger} />
+            <Timeline 
+              videoId={videoId} 
+              onTimelineClick={handleTimeChange} 
+              refreshTrigger={timelineRefreshTrigger}
+              highlightedTimestamps={searchHighlights}
+            />
           </div>
           
           {/* Right Sidebar - Transcript */}

@@ -6,9 +6,10 @@ interface Props {
   videoId: string
   onTimelineClick: (time: number) => void
   refreshTrigger?: number
+  highlightedTimestamps?: number[]
 }
 
-const Timeline: React.FC<Props> = ({ videoId, onTimelineClick, refreshTrigger }) => {
+const Timeline: React.FC<Props> = ({ videoId, onTimelineClick, refreshTrigger, highlightedTimestamps = [] }) => {
   const [timeline, setTimeline] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -46,6 +47,11 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick, refreshTrigger })
     }
   }
 
+  const isHighlighted = (timestamp: number) => {
+    // Check if this timestamp is close to any highlighted timestamp (within 2 seconds)
+    return highlightedTimestamps.some(ht => Math.abs(ht - timestamp) < 2)
+  }
+
   return (
     <div className="panel timeline-panel">
       <div className="timeline-header">
@@ -69,7 +75,7 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick, refreshTrigger })
             {timeline.map((event, idx) => (
               <div 
                 key={idx} 
-                className="timeline-segment"
+                className={`timeline-segment ${isHighlighted(event.timestamp) ? 'highlighted' : ''}`}
                 onClick={() => {
                   console.log('Timeline clicked:', event.timestamp, 'Event:', event)
                   onTimelineClick(event.timestamp)
@@ -192,6 +198,32 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick, refreshTrigger })
           transform: translateY(-4px);
           box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
           background: linear-gradient(180deg, #2563eb 0%, #1e3a5f 100%);
+        }
+        
+        .timeline-segment.highlighted {
+          background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+          border: 2px solid #fbbf24;
+          box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+          animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .timeline-segment.highlighted .segment-time {
+          color: #78350f;
+        }
+        
+        .timeline-segment.highlighted:hover {
+          background: linear-gradient(180deg, #fcd34d 0%, #fbbf24 100%);
+          border-color: #fcd34d;
+          box-shadow: 0 4px 20px rgba(251, 191, 36, 0.6);
+        }
+        
+        @keyframes pulse {
+          0%, 100% {
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+          }
+          50% {
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.8);
+          }
         }
         
         .segment-icon {

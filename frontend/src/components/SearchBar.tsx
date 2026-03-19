@@ -5,11 +5,11 @@ import { API_URL } from '../config'
 interface Props {
   videoId: string
   onResultClick: (time: number) => void
+  onSearchResults?: (results: any[]) => void
 }
 
-const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
+const SearchBar: React.FC<Props> = ({ videoId, onResultClick, onSearchResults }) => {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<any[]>([])
   const [searching, setSearching] = useState(false)
   const [indexing, setIndexing] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
@@ -42,9 +42,20 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         query
       })
       console.log('Search response:', response.data)
-      console.log('Search results:', response.data.results)
-      console.log('Results length:', response.data.results?.length)
-      setResults(response.data.results || [])
+      const searchResults = response.data.results || []
+      console.log('Found', searchResults.length, 'results - highlighting timeline')
+      
+      // Notify parent about search results for timeline highlighting
+      if (onSearchResults) {
+        onSearchResults(searchResults)
+      }
+      
+      // Show success toast with result count
+      if (searchResults.length > 0) {
+        showToast(`Found ${searchResults.length} matching moment${searchResults.length > 1 ? 's' : ''} - check timeline!`, 'success')
+      } else {
+        showToast('No results found. Try a different search.', 'error')
+      }
     } catch (error) {
       console.error('Search failed:', error)
       showToast('Search failed. Make sure video is indexed.', 'error')
@@ -57,12 +68,6 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
     if (e.key === 'Enter') {
       handleSearch()
     }
-  }
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   return (
@@ -113,37 +118,6 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
           </button>
         </div>
       </div>
-      
-      {results.length > 0 && (
-        <div className="search-results">
-          <div className="results-header">
-            <span className="results-count">{results.length} results found</span>
-          </div>
-          <div className="results-list">
-            {results.map((result, idx) => (
-              <div 
-                key={idx} 
-                className="search-result"
-                onClick={() => onResultClick(result.timestamp)}
-              >
-                <div className="result-header">
-                  <span className="result-time">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                      <path d="M12 6V12L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                    {formatTime(result.timestamp)}
-                  </span>
-                  <span className="result-score">
-                    {(result.relevance_score * 100).toFixed(0)}% match
-                  </span>
-                </div>
-                <p className="result-text">{result.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
       
       <style>{`
         .search-panel {
@@ -314,82 +288,6 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         
         @keyframes spin {
           to { transform: rotate(360deg); }
-        }
-        
-        .results-header {
-          margin-bottom: 18px;
-          padding-bottom: 14px;
-          border-bottom: 2px solid #e2e8f0;
-        }
-        
-        .results-count {
-          color: #64748b;
-          font-size: 0.95rem;
-          font-weight: 700;
-        }
-        
-        .results-list {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-        }
-        
-        .search-result {
-          padding: 14px;
-          background: #0f1419;
-          border: 1px solid #2d3748;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        
-        .search-result:hover {
-          background: #2d3748;
-          border-color: #0ea5e9;
-        }
-        
-        .result-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 12px;
-        }
-        
-        .result-time {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: #0ea5e9;
-          font-weight: 700;
-          font-size: 0.95rem;
-        }
-        
-        .result-score {
-          background: linear-gradient(135deg, #f0f9ff 0%, #fce7f3 100%);
-          padding: 6px 14px;
-          border-radius: 24px;
-          font-size: 0.85rem;
-          color: #0ea5e9;
-          font-weight: 700;
-          border: 2px solid #e0f2fe;
-        }
-        
-        .result-text {
-          color: #9ca3af;
-          font-size: 0.85rem;
-          line-height: 1.5;
-          font-weight: 400;
-        }
-        
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
       `}</style>
     </div>
