@@ -167,7 +167,7 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         }
         
         .search-input-wrapper {
-          margin-bottom: 28px;
+          margin-bottom: 20px;
         }
         
         .search-input-container {
@@ -179,6 +179,7 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
           border-radius: 6px;
           padding: 4px;
           transition: all 0.2s;
+          width: 100%;
         }
         
         .search-input-container:focus-within {
@@ -194,13 +195,14 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
         
         .search-input {
           flex: 1;
-          padding: 12px 16px 12px 48px;
+          padding: 14px 16px 14px 48px;
           background: transparent;
           border: none;
           color: #e4e7eb;
           font-size: 0.9rem;
           outline: none;
           font-weight: 400;
+          width: 100%;
         }
         
         .search-input::placeholder {

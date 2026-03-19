@@ -18,6 +18,7 @@ function App() {
     // If we have a video ID, show the app directly
     return !!localStorage.getItem('currentVideoId')
   })
+  const [timelineRefreshTrigger, setTimelineRefreshTrigger] = useState<number>(0)
 
   // Save video ID to localStorage when it changes
   const handleVideoIdChange = (id: string | null) => {
@@ -32,6 +33,11 @@ function App() {
   const handleTimeChange = (time: number) => {
     console.log('App: Setting currentTime to', time)
     setCurrentTime(time)
+  }
+
+  const handleAnalysisComplete = () => {
+    console.log('Analysis complete callback received, refreshing timeline')
+    setTimelineRefreshTrigger(prev => prev + 1)
   }
 
   if (!showApp) {
@@ -61,13 +67,13 @@ function App() {
           {/* Left Sidebar - Search & Analysis */}
           <div className="left-sidebar">
             <SearchBar videoId={videoId} onResultClick={handleTimeChange} />
-            <AnalysisPanel videoId={videoId} />
+            <AnalysisPanel videoId={videoId} onAnalysisComplete={handleAnalysisComplete} />
           </div>
           
           {/* Center - Video Player (Fixed) */}
           <div className="center-panel">
             <VideoPlayer videoId={videoId} currentTime={currentTime} onTimeUpdate={handleTimeChange} />
-            <Timeline videoId={videoId} onTimelineClick={handleTimeChange} />
+            <Timeline videoId={videoId} onTimelineClick={handleTimeChange} refreshTrigger={timelineRefreshTrigger} />
           </div>
           
           {/* Right Sidebar - Transcript */}

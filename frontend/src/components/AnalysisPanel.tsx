@@ -4,9 +4,10 @@ import { API_URL } from '../config'
 
 interface Props {
   videoId: string
+  onAnalysisComplete?: () => void
 }
 
-const AnalysisPanel: React.FC<Props> = ({ videoId }) => {
+const AnalysisPanel: React.FC<Props> = ({ videoId, onAnalysisComplete }) => {
   const [scenes, setScenes] = useState<any[]>([])
   const [objects, setObjects] = useState<any[]>([])
   const [emotions, setEmotions] = useState<any[]>([])
@@ -30,6 +31,14 @@ const AnalysisPanel: React.FC<Props> = ({ videoId }) => {
       setEmotions(emotionsRes.data.emotions || [])
       
       console.log('State updated - Scenes:', scenesRes.data.scenes?.length, 'Objects:', objectsRes.data.objects?.length, 'Emotions:', emotionsRes.data.emotions?.length)
+      
+      // Wait a moment for database to fully commit, then notify parent
+      setTimeout(() => {
+        console.log('Triggering timeline refresh after analysis')
+        if (onAnalysisComplete) {
+          onAnalysisComplete()
+        }
+      }, 300)
     } catch (err) {
       console.error('Analysis failed:', err)
       alert('Analysis failed. Check console for details.')

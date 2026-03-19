@@ -5,16 +5,31 @@ import { API_URL } from '../config'
 interface Props {
   videoId: string
   onTimelineClick: (time: number) => void
+  refreshTrigger?: number
 }
 
-const Timeline: React.FC<Props> = ({ videoId, onTimelineClick }) => {
+const Timeline: React.FC<Props> = ({ videoId, onTimelineClick, refreshTrigger }) => {
   const [timeline, setTimeline] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const fetchTimeline = async () => {
+    console.log('Timeline: Fetching timeline data for video', videoId)
+    setLoading(true)
+    try {
+      const res = await axios.get(`${API_URL}/api/videos/${videoId}/timeline`)
+      console.log('Timeline: Received data', res.data.timeline?.length, 'events')
+      setTimeline(res.data.timeline)
+    } catch (err) {
+      console.error('Failed to fetch timeline:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/videos/${videoId}/timeline`)
-      .then(res => setTimeline(res.data.timeline))
-      .catch(err => console.error(err))
-  }, [videoId])
+    console.log('Timeline: useEffect triggered, refreshTrigger=', refreshTrigger)
+    fetchTimeline()
+  }, [videoId, refreshTrigger])
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -33,26 +48,36 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick }) => {
 
   return (
     <div className="panel timeline-panel">
-      <h3>⏱️ Interactive Timeline</h3>
+      <div className="timeline-header">
+        <h3>⏱️ Interactive Timeline</h3>
+        <button 
+          className="refresh-btn" 
+          onClick={fetchTimeline}
+          disabled={loading}
+          title="Refresh timeline"
+        >
+          {loading ? '⟳' : '↻'}
+        </button>
+      </div>
       <div className="timeline-container">
         {timeline.length === 0 ? (
-          <p className="empty-state">Timeline will appear after processing...</p>
+          <p className="empty-state">
+            {loading ? 'Loading timeline...' : 'Timeline will appear after analysis...'}
+          </p>
         ) : (
-          <div className="timeline-events">
+          <div className="timeline-track">
             {timeline.map((event, idx) => (
               <div 
                 key={idx} 
-                className="timeline-event"
+                className="timeline-segment"
                 onClick={() => {
                   console.log('Timeline clicked:', event.timestamp, 'Event:', event)
                   onTimelineClick(event.timestamp)
                 }}
+                title={`${formatTime(event.timestamp)} - ${event.description}`}
               >
-                <div className="event-icon">{getEventIcon(event.type)}</div>
-                <div className="event-content">
-                  <span className="event-time">{formatTime(event.timestamp)}</span>
-                  <p className="event-description">{event.description}</p>
-                </div>
+                <div className="segment-icon">{getEventIcon(event.type)}</div>
+                <div className="segment-time">{formatTime(event.timestamp)}</div>
               </div>
             ))}
           </div>
@@ -63,64 +88,122 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick }) => {
         .timeline-panel {
           background: #1a1f2e;
           border-radius: 0;
-          overflow-y: auto;
+          overflow: hidden;
           max-height: none;
+          padding: 16px;
+        }
+        
+        .timeline-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
         }
         
         .timeline-panel h3 {
           color: #9ca3af !important;
           opacity: 1 !important;
+          margin: 0;
+        }
+        
+        .refresh-btn {
+          background: transparent;
+          border: 1px solid #374151;
+          color: #9ca3af;
+          width: 28px;
+          height: 28px;
+          border-radius: 4px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
+          transition: all 0.2s;
+        }
+        
+        .refresh-btn:hover:not(:disabled) {
+          background: #374151;
+          color: #0ea5e9;
+          border-color: #0ea5e9;
+        }
+        
+        .refresh-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
         
         .timeline-container {
           margin-top: 0;
         }
         
-        .timeline-events {
+        .timeline-track {
           display: flex;
-          flex-direction: column;
-          gap: 8px;
+          gap: 4px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          padding: 8px 0;
+          min-height: 80px;
+          align-items: flex-end;
         }
         
-        .timeline-event {
-          display: flex;
-          gap: 12px;
-          padding: 12px;
+        .timeline-track::-webkit-scrollbar {
+          height: 6px;
+        }
+        
+        .timeline-track::-webkit-scrollbar-track {
           background: #0f1419;
-          border: 1px solid #2d3748;
+          border-radius: 3px;
+        }
+        
+        .timeline-track::-webkit-scrollbar-thumb {
+          background: #4a5568;
+          border-radius: 3px;
+        }
+        
+        .timeline-track::-webkit-scrollbar-thumb:hover {
+          background: #0ea5e9;
+        }
+        
+        .timeline-segment {
+          flex-shrink: 0;
+          width: 80px;
+          height: 60px;
+          background: linear-gradient(180deg, #1e3a5f 0%, #0f1419 100%);
+          border: 2px solid #2d3748;
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          position: relative;
         }
         
-        .timeline-event:hover {
-          background: #2d3748;
+        .timeline-segment:hover {
           border-color: #0ea5e9;
-          transform: translateX(3px);
+          transform: translateY(-4px);
+          box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+          background: linear-gradient(180deg, #2563eb 0%, #1e3a5f 100%);
         }
         
-        .event-icon {
+        .segment-icon {
           font-size: 1.3rem;
-          flex-shrink: 0;
-          opacity: 0.8;
+          opacity: 0.9;
         }
         
-        .event-content {
-          flex: 1;
-        }
-        
-        .event-time {
+        .segment-time {
           color: #0ea5e9;
-          font-weight: 600;
-          font-size: 0.85rem;
-          display: block;
-          margin-bottom: 4px;
-        }
-        
-        .event-description {
-          color: #9ca3af;
-          font-size: 0.85rem;
-          line-height: 1.4;
+          font-weight: 700;
+          font-size: 0.7rem;
+          font-family: 'Courier New', monospace;
         }
         
         .empty-state {

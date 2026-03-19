@@ -193,6 +193,8 @@ const VideoPlayer: React.FC<Props> = ({ videoId, currentTime, onTimeUpdate }) =>
         .video-wrapper {
           position: relative;
           width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
           flex: 1;
           background: #000;
           display: flex;
@@ -207,6 +209,7 @@ const VideoPlayer: React.FC<Props> = ({ videoId, currentTime, onTimeUpdate }) =>
           width: 100%;
           height: 100%;
           max-height: 100%;
+          max-width: 100%;
           display: block;
           background: #000;
           object-fit: contain;
