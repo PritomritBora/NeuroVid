@@ -11,7 +11,7 @@ interface Props {
 const SearchBar: React.FC<Props> = ({ videoId, onResultClick, onSearchResults }) => {
   const [query, setQuery] = useState('')
   const [searching, setSearching] = useState(false)
-  const [indexing, setIndexing] = useState(false)
+  const [indexed, setIndexed] = useState(true) // Assume indexed by default
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
   const showToast = (message: string, type: 'success' | 'error') => {
@@ -19,16 +19,15 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick, onSearchResults })
     setTimeout(() => setToast(null), 3000)
   }
 
-  const handleIndex = async () => {
-    setIndexing(true)
+  const handleManualIndex = async () => {
     try {
+      console.log('Manual indexing video:', videoId)
       await axios.post(`${API_URL}/api/search/index`, { video_id: videoId })
-      showToast('Video indexed for search! You can now search.', 'success')
+      setIndexed(true)
+      showToast('Video indexed successfully!', 'success')
     } catch (error) {
-      console.error('Indexing failed:', error)
+      console.error('Manual indexing failed:', error)
       showToast('Indexing failed. Make sure Qdrant is running.', 'error')
-    } finally {
-      setIndexing(false)
     }
   }
 
@@ -56,9 +55,13 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick, onSearchResults })
       } else {
         showToast('No results found. Try a different search.', 'error')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Search failed:', error)
-      showToast('Search failed. Make sure video is indexed.', 'error')
+      if (error.response?.status === 404 || error.response?.data?.detail?.includes('not indexed')) {
+        showToast('Video not indexed yet. Click "Re-index" below.', 'error')
+      } else {
+        showToast('Search failed. Check console for details.', 'error')
+      }
     } finally {
       setSearching(false)
     }
@@ -86,12 +89,8 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick, onSearchResults })
           <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
           <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
         </svg>
-        Semantic Search
+        Smart Search
       </h3>
-      
-      <button onClick={handleIndex} disabled={indexing} className="index-btn">
-        {indexing ? 'Indexing...' : '🔄 Index for Search'}
-      </button>
       
       <div className="search-input-wrapper">
         <div className="search-input-container">
@@ -117,6 +116,11 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick, onSearchResults })
             )}
           </button>
         </div>
+        {!indexed && (
+          <button onClick={handleManualIndex} className="reindex-btn">
+            🔄 Re-index for Search
+          </button>
+        )}
       </div>
       
       <style>{`
@@ -183,30 +187,6 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick, onSearchResults })
         .search-panel h3 {
           color: #9ca3af !important;
           opacity: 1 !important;
-        }
-        
-        .index-btn {
-          width: 100%;
-          padding: 10px;
-          background: #2d3748;
-          color: #10b981;
-          border: 1px solid #10b981;
-          border-radius: 6px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-          margin-bottom: 15px;
-        }
-        
-        .index-btn:hover:not(:disabled) {
-          background: #10b981;
-          color: white;
-        }
-        
-        .index-btn:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
         }
         
         .search-input-wrapper {
@@ -288,6 +268,26 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick, onSearchResults })
         
         @keyframes spin {
           to { transform: rotate(360deg); }
+        }
+        
+        .reindex-btn {
+          width: 100%;
+          padding: 8px;
+          background: transparent;
+          color: #64748b;
+          border: 1px solid #374151;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+          margin-top: 8px;
+        }
+        
+        .reindex-btn:hover {
+          background: #374151;
+          color: #10b981;
+          border-color: #10b981;
         }
       `}</style>
     </div>

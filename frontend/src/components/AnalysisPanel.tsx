@@ -5,9 +5,10 @@ import { API_URL } from '../config'
 interface Props {
   videoId: string
   onAnalysisComplete?: () => void
+  onIndexComplete?: () => void
 }
 
-const AnalysisPanel: React.FC<Props> = ({ videoId, onAnalysisComplete }) => {
+const AnalysisPanel: React.FC<Props> = ({ videoId, onAnalysisComplete, onIndexComplete }) => {
   const [scenes, setScenes] = useState<any[]>([])
   const [objects, setObjects] = useState<any[]>([])
   const [emotions, setEmotions] = useState<any[]>([])
@@ -38,9 +39,22 @@ const AnalysisPanel: React.FC<Props> = ({ videoId, onAnalysisComplete }) => {
       setEmotions(newEmotions)
       
       // Use setTimeout to ensure state updates have been processed
-      setTimeout(() => {
+      setTimeout(async () => {
         setLoading(false)
         console.log('Loading set to false, triggering timeline refresh')
+        
+        // Auto-index for search after analysis completes
+        try {
+          console.log('Auto-indexing after analysis...')
+          await axios.post(`${API_URL}/api/search/index`, { video_id: videoId })
+          console.log('Video indexed successfully after analysis')
+          if (onIndexComplete) {
+            onIndexComplete()
+          }
+        } catch (indexErr) {
+          console.error('Auto-indexing after analysis failed:', indexErr)
+        }
+        
         if (onAnalysisComplete) {
           onAnalysisComplete()
         }
@@ -66,7 +80,14 @@ const AnalysisPanel: React.FC<Props> = ({ videoId, onAnalysisComplete }) => {
 
   return (
     <div className="panel analysis-panel">
-      <h3>🔍 AI Analysis</h3>
+      <h3>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="currentColor"/>
+          <path d="M19 15L19.5 17L21.5 17.5L19.5 18L19 20L18.5 18L16.5 17.5L18.5 17L19 15Z" fill="currentColor"/>
+          <path d="M5 4L5.5 6L7.5 6.5L5.5 7L5 9L4.5 7L2.5 6.5L4.5 6L5 4Z" fill="currentColor"/>
+        </svg>
+        AI Analysis
+      </h3>
       
       <button onClick={runAnalysis} disabled={loading} className="analyze-btn">
         {loading ? 'Analyzing...' : 'Run Analysis'}

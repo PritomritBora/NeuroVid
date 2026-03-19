@@ -38,6 +38,14 @@ function App() {
 
   const handleAnalysisComplete = () => {
     console.log('Analysis complete callback received, refreshing timeline')
+    // Clear search highlights when analysis runs
+    setSearchHighlights([])
+    setTimelineRefreshTrigger(prev => prev + 1)
+  }
+
+  const handleIndexComplete = () => {
+    console.log('Index complete callback received')
+    // Trigger SearchBar to update its indexed state
     setTimelineRefreshTrigger(prev => prev + 1)
   }
 
@@ -75,7 +83,7 @@ function App() {
           {/* Left Sidebar - Search & Analysis */}
           <div className="left-sidebar">
             <SearchBar videoId={videoId} onResultClick={handleTimeChange} onSearchResults={handleSearchResults} />
-            <AnalysisPanel videoId={videoId} onAnalysisComplete={handleAnalysisComplete} />
+            <AnalysisPanel videoId={videoId} onAnalysisComplete={handleAnalysisComplete} onIndexComplete={handleIndexComplete} />
           </div>
           
           {/* Center - Video Player (Fixed) */}
