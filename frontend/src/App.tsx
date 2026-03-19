@@ -9,9 +9,25 @@ import LandingPage from './components/LandingPage'
 import './App.css'
 
 function App() {
-  const [videoId, setVideoId] = useState<string | null>(null)
+  const [videoId, setVideoId] = useState<string | null>(() => {
+    // Load video ID from localStorage on mount
+    return localStorage.getItem('currentVideoId')
+  })
   const [currentTime, setCurrentTime] = useState<number>(0)
-  const [showApp, setShowApp] = useState<boolean>(false)
+  const [showApp, setShowApp] = useState<boolean>(() => {
+    // If we have a video ID, show the app directly
+    return !!localStorage.getItem('currentVideoId')
+  })
+
+  // Save video ID to localStorage when it changes
+  const handleVideoIdChange = (id: string | null) => {
+    setVideoId(id)
+    if (id) {
+      localStorage.setItem('currentVideoId', id)
+    } else {
+      localStorage.removeItem('currentVideoId')
+    }
+  }
 
   if (!showApp) {
     return <LandingPage onGetStarted={() => setShowApp(true)} />
@@ -23,7 +39,7 @@ function App() {
         <div className="header-content">
           <h1>🎬 AI Video Intelligence</h1>
           {videoId && (
-            <button className="new-video-btn" onClick={() => setVideoId(null)}>
+            <button className="new-video-btn" onClick={() => handleVideoIdChange(null)}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               </svg>
@@ -34,7 +50,7 @@ function App() {
       </header>
       
       {!videoId ? (
-        <VideoUpload onUploadSuccess={setVideoId} />
+        <VideoUpload onUploadSuccess={handleVideoIdChange} />
       ) : (
         <div className="main-content">
           <div className="left-panel">

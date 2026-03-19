@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react'
+import { API_URL } from '../config'
 
 interface Props {
   videoId: string
@@ -30,7 +31,7 @@ const VideoPlayer: React.FC<Props> = ({ videoId, currentTime, onTimeUpdate }) =>
           onTimeUpdate={handleTimeUpdate}
           className="video-player"
         >
-          <source src={`http://localhost:8000/api/videos/${videoId}/stream`} />
+          <source src={`${API_URL}/api/videos/${videoId}/stream`} />
           Your browser does not support the video tag.
         </video>
       </div>

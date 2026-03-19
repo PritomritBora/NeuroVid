@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 interface Props {
   videoId: string
@@ -10,7 +11,7 @@ const Timeline: React.FC<Props> = ({ videoId, onTimelineClick }) => {
   const [timeline, setTimeline] = useState<any[]>([])
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/videos/${videoId}/timeline`)
+    axios.get(`${API_URL}/api/videos/${videoId}/timeline`)
       .then(res => setTimeline(res.data.timeline))
       .catch(err => console.error(err))
   }, [videoId])

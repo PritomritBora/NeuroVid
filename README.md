@@ -2,6 +2,42 @@
 
 A production-ready multimodal AI system for advanced video analysis, transcription, object detection, and intelligent semantic search.
 
+---
+
+## 👋 New Here?
+
+**→ Start with [START_HERE.md](START_HERE.md) for a complete beginner's guide**
+
+---
+
+## 🚀 Quick Start
+
+**Get started in 5 minutes!** See [QUICKSTART.md](QUICKSTART.md) for detailed instructions.
+
+```bash
+# 1. Run setup
+chmod +x setup.sh
+./setup.sh
+
+# 2. Start backend
+cd backend && source venv/bin/activate && python main.py
+
+# 3. Start frontend (in new terminal)
+cd frontend && npm run dev
+
+# 4. Open http://localhost:5173
+```
+
+## ✨ What Can It Do?
+
+- 🗣️ **Speech-to-Text**: Automatic transcription with Whisper AI (99 languages)
+- 🎬 **Scene Detection**: Automatic segmentation with keyframe extraction
+- 🎯 **Object Detection**: Real-time recognition using YOLOv5 (80+ classes)
+- 😊 **Emotion Analysis**: Sentiment detection from transcript text
+- 🔍 **Semantic Search**: Natural language queries across video content
+- ⏱️ **Interactive Timeline**: Visual navigation with synchronized playback
+- 📊 **AI Dashboard**: Comprehensive insights and statistics
+
 ## 🚀 Features
 
 ### Core Capabilities
@@ -99,52 +135,49 @@ A production-ready multimodal AI system for advanced video analysis, transcripti
 ## 📦 Installation
 
 ### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- Docker & Docker Compose
-- FFmpeg (for video processing)
+- Python 3.10+ (`python3 --version`)
+- Node.js 18+ (`node --version`)
+- Docker & Docker Compose (`docker --version`)
+- FFmpeg (`ffmpeg -version`)
 
 ### Quick Start
 
-1. **Clone the repository**
 ```bash
+# 1. Clone repository
 git clone <repository-url>
 cd ai-video-intelligence
-```
 
-2. **Run setup script**
-```bash
+# 2. Run setup script
 chmod +x setup.sh
 ./setup.sh
-```
 
-3. **Start services with Docker Compose**
-```bash
-docker-compose up
-```
-
-Or run manually:
-
-**Backend:**
-```bash
+# 3. Start backend (Terminal 1)
 cd backend
-python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
 python main.py
-```
 
-**Frontend:**
-```bash
+# 4. Start frontend (Terminal 2)
 cd frontend
-npm install
 npm run dev
+
+# 5. Open browser
+# Frontend: http://localhost:5173
+# API Docs: http://localhost:8000/docs
 ```
 
-4. **Access the application**
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+**Need help?** See [QUICKSTART.md](QUICKSTART.md) for detailed instructions.
+
+**Having issues?** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for solutions.
+
+**Deploying to production?** Review [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md).
+
+### Verify Setup
+
+```bash
+# Run diagnostic test
+chmod +x test_setup.sh
+./test_setup.sh
+```
 
 ## 🎯 Usage
 
@@ -251,27 +284,46 @@ Whisper supports 99 languages automatically
 - **Search Latency**: <100ms for semantic queries
 - **Concurrent Users**: Scales with Docker replicas
 
+## 📚 Documentation
+
+- **[QUICKSTART.md](QUICKSTART.md)** - Get started in 5 minutes
+- **[FEATURES.md](FEATURES.md)** - Complete feature list and roadmap
+- **[API.md](API.md)** - API documentation and examples
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Development guide and best practices
+- **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)** - Architecture overview
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and solutions
+- **[DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)** - Production deployment guide
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history and changes
+
 ## 🐛 Troubleshooting
+
+**Quick diagnostics:**
+```bash
+./test_setup.sh
+```
+
+**Common issues:**
 
 **Issue**: Whisper model download fails
 ```bash
 # Pre-download models
+cd backend && source venv/bin/activate
 python -c "import whisper; whisper.load_model('base')"
-```
-
-**Issue**: YOLO model not loading
-```bash
-# Clear torch hub cache
-rm -rf ~/.cache/torch/hub/
 ```
 
 **Issue**: Database connection error
 ```bash
-# Check PostgreSQL is running
-docker-compose ps
-# Restart services
 docker-compose restart db
+docker-compose ps
 ```
+
+**Issue**: Out of memory
+```bash
+# Use smaller model in backend/.env
+WHISPER_MODEL=tiny
+```
+
+**More help:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for comprehensive solutions.
 
 ## 🤝 Contributing
 

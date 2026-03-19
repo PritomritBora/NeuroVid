@@ -4,7 +4,10 @@ import whisper
 import asyncio
 from pathlib import Path
 from typing import Optional, Dict, List
-from moviepy.editor import VideoFileClip
+try:
+    from moviepy import VideoFileClip
+except ImportError:
+    from moviepy.editor import VideoFileClip
 from sqlalchemy.orm import Session
 
 from ..models.database import Video, Frame, Transcript
@@ -164,6 +167,9 @@ class VideoProcessor:
     
     async def get_transcript(self, video_id: str, db: Session) -> List[Dict]:
         """Get video transcript"""
+        # Refresh session to see latest data
+        db.expire_all()
+        
         transcripts = db.query(Transcript).filter(
             Transcript.video_id == video_id
         ).order_by(Transcript.start_time).all()

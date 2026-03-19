@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 interface Props {
   onUploadSuccess: (videoId: string) => void
@@ -17,7 +18,7 @@ const VideoUpload: React.FC<Props> = ({ onUploadSuccess }) => {
     formData.append('file', file)
 
     try {
-      const response = await axios.post('http://localhost:8000/api/videos/upload', formData, {
+      const response = await axios.post(`${API_URL}/api/videos/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1))

@@ -4,12 +4,16 @@ import uvicorn
 
 from app.api import videos, analysis, search
 from app.database import init_db
+from app.config import settings, ALLOWED_ORIGINS
 
 app = FastAPI(title="AI Video Intelligence API")
 
+# Debug: Print CORS origins
+print(f"🔧 CORS Allowed Origins: {ALLOWED_ORIGINS}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -33,4 +37,4 @@ def health():
     return {"status": "healthy"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8002)  # Using port 8002 to avoid conflict

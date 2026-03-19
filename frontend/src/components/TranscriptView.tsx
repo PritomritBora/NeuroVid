@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 interface Props {
   videoId: string
@@ -18,16 +19,36 @@ const TranscriptView: React.FC<Props> = ({ videoId, currentTime, onTranscriptCli
   const [transcript, setTranscript] = useState<TranscriptSegment[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    axios.get(`http://localhost:8000/api/videos/${videoId}/transcript`)
+  const fetchTranscript = () => {
+    console.log('Fetching transcript for video:', videoId)
+    // Add timestamp to prevent caching
+    axios.get(`${API_URL}/api/videos/${videoId}/transcript?t=${Date.now()}`)
       .then(res => {
-        setTranscript(res.data.transcript)
+        console.log('Transcript response:', JSON.stringify(res.data, null, 2))
+        console.log('Transcript array:', res.data.transcript)
+        console.log('Transcript length:', res.data.transcript?.length)
+        setTranscript(res.data.transcript || [])
         setLoading(false)
       })
       .catch(err => {
-        console.error(err)
+        console.error('Transcript error:', err)
         setLoading(false)
       })
+  }
+
+  useEffect(() => {
+    fetchTranscript()
+    
+    // Poll for transcript if empty (video might still be processing)
+    const interval = setInterval(() => {
+      if (transcript.length === 0) {
+        fetchTranscript()
+      } else {
+        clearInterval(interval)
+      }
+    }, 3000) // Check every 3 seconds
+    
+    return () => clearInterval(interval)
   }, [videoId])
 
   const formatTime = (seconds: number) => {
@@ -66,6 +87,8 @@ const TranscriptView: React.FC<Props> = ({ videoId, currentTime, onTranscriptCli
         .transcript-panel {
           max-height: 600px;
           overflow-y: auto;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
         }
         
         .transcript-list {
@@ -76,7 +99,7 @@ const TranscriptView: React.FC<Props> = ({ videoId, currentTime, onTranscriptCli
         
         .transcript-segment {
           padding: 12px;
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(0, 0, 0, 0.05);
           border-radius: 8px;
           cursor: pointer;
           transition: all 0.2s;
@@ -84,12 +107,12 @@ const TranscriptView: React.FC<Props> = ({ videoId, currentTime, onTranscriptCli
         }
         
         .transcript-segment:hover {
-          background: rgba(255, 255, 255, 0.1);
+          background: rgba(0, 0, 0, 0.1);
           transform: translateX(5px);
         }
         
         .transcript-segment.active {
-          background: rgba(102, 126, 234, 0.2);
+          background: rgba(102, 126, 234, 0.15);
           border-left-color: #667eea;
         }
         
@@ -102,13 +125,13 @@ const TranscriptView: React.FC<Props> = ({ videoId, currentTime, onTranscriptCli
         }
         
         .text {
-          color: white;
+          color: #1a202c;
           line-height: 1.5;
         }
         
         .empty-state {
           text-align: center;
-          color: rgba(255, 255, 255, 0.6);
+          color: #64748b;
           padding: 40px 20px;
         }
       `}</style>

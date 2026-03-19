@@ -10,6 +10,9 @@ services:
       - video_uploads:/app/uploads
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/videodb
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
     depends_on:
       - db
       - qdrant
@@ -21,6 +24,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
 
   db:
     image: postgres:15
@@ -30,6 +35,8 @@ services:
       POSTGRES_DB: videodb
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
   qdrant:
     image: qdrant/qdrant:latest

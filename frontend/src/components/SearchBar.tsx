@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 interface Props {
   videoId: string
@@ -16,7 +17,7 @@ const SearchBar: React.FC<Props> = ({ videoId, onResultClick }) => {
     
     setSearching(true)
     try {
-      const response = await axios.post('http://localhost:8000/api/search/query', {
+      const response = await axios.post(`${API_URL}/api/search/query`, {
         video_id: videoId,
         query
       })

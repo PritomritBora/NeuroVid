@@ -13,8 +13,8 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           <div className="nav-content">
             <div className="logo">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <rect x="2" y="2" width="20" height="20" rx="4" stroke="currentColor" strokeWidth="2"/>
-                <path d="M9 8L15 12L9 16V8Z" fill="currentColor"/>
+                <rect x="2" y="2" width="20" height="20" rx="4" stroke="currentColor" strokeWidth="2" />
+                <path d="M9 8L15 12L9 16V8Z" fill="currentColor" />
               </svg>
               <span>NeuroVid</span>
             </div>
@@ -40,20 +40,20 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           <div className="hero-actions">
             <button className="primary-btn" onClick={onGetStarted}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
               Start Analyzing
             </button>
             <button className="secondary-btn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                <path d="M10 8L16 12L10 16V8Z" fill="currentColor"/>
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                <path d="M10 8L16 12L10 16V8Z" fill="currentColor" />
               </svg>
               Watch Demo
             </button>
           </div>
           <div className="hero-stats">
-            <div className="stat">
+            {/* <div className="stat">
               <div className="stat-value">99+</div>
               <div className="stat-label">Languages</div>
             </div>
@@ -64,7 +64,7 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
             <div className="stat">
               <div className="stat-value">Real-time</div>
               <div className="stat-label">Processing</div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -75,14 +75,14 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           <h2>Powerful Features</h2>
           <p>Everything you need to understand your videos</p>
         </div>
-        
+
         <div className="features-grid">
           <div className="feature-card">
-            <div className="feature-icon" style={{background: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)'}}>
+            <div className="feature-icon" style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <h3>Speech-to-Text</h3>
@@ -90,11 +90,11 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon" style={{background: 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)'}}>
+            <div className="feature-icon" style={{ background: 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5" fill="white"/>
-                <path d="M21 15L16 10L5 21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" fill="white" />
+                <path d="M21 15L16 10L5 21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <h3>Object Detection</h3>
@@ -102,10 +102,10 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon" style={{background: 'linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%)'}}>
+            <div className="feature-icon" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%)' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="11" cy="11" r="8" stroke="white" strokeWidth="2"/>
-                <path d="M21 21L16.65 16.65" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                <circle cx="11" cy="11" r="8" stroke="white" strokeWidth="2" />
+                <path d="M21 21L16.65 16.65" stroke="white" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </div>
             <h3>Semantic Search</h3>
@@ -113,12 +113,12 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon" style={{background: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)'}}>
+            <div className="feature-icon" style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2"/>
-                <path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                <circle cx="9" cy="9" r="1" fill="white"/>
-                <circle cx="15" cy="9" r="1" fill="white"/>
+                <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" />
+                <path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="9" cy="9" r="1" fill="white" />
+                <circle cx="15" cy="9" r="1" fill="white" />
               </svg>
             </div>
             <h3>Emotion Analysis</h3>
@@ -126,10 +126,10 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon" style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}>
+            <div className="feature-icon" style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <h3>Scene Detection</h3>
@@ -137,10 +137,10 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon" style={{background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)'}}>
+            <div className="feature-icon" style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 22V12H15V22" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9 22V12H15V22" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <h3>Self-Hosted</h3>
@@ -157,7 +157,7 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           <button className="cta-large-btn" onClick={onGetStarted}>
             Start Analyzing Videos
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
         </div>

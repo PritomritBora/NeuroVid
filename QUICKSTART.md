@@ -1,134 +1,179 @@
 # Quick Start Guide
 
-Get the AI Video Intelligence Platform running in 5 minutes!
+Get your AI Video Intelligence Platform running in 5 minutes!
 
-## Option 1: Docker Compose (Recommended)
+## Prerequisites
 
-```bash
-# Start all services
-docker-compose up
+Make sure you have installed:
+- Python 3.10+ (`python3 --version`)
+- Node.js 18+ (`node --version`)
+- Docker & Docker Compose (`docker --version`)
+- FFmpeg (`ffmpeg -version`)
 
-# Access the app
-# Frontend: http://localhost:5173
-# Backend API: http://localhost:8000/docs
-```
+## Installation
 
-That's it! The platform is ready to use.
-
-## Option 2: Manual Setup
-
-### 1. Start Database Services
+### 1. Run Setup Script
 
 ```bash
-docker-compose up -d db qdrant
+chmod +x setup.sh
+./setup.sh
 ```
 
-### 2. Backend Setup
+This will:
+- Create environment files
+- Start PostgreSQL and Qdrant in Docker
+- Set up Python virtual environment
+- Install all dependencies
+- Initialize the database
 
+### 2. Start the Application
+
+**Option A: Manual (Recommended for Development)**
+
+Open two terminal windows:
+
+Terminal 1 - Backend:
 ```bash
 cd backend
-
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Create .env file
-cp .env.example .env
-
-# Run server
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 python main.py
 ```
 
-Backend will be available at http://localhost:8000
-
-### 3. Frontend Setup
-
-Open a new terminal:
-
+Terminal 2 - Frontend:
 ```bash
 cd frontend
-
-# Install dependencies
-npm install
-
-# Run dev server
 npm run dev
 ```
 
-Frontend will be available at http://localhost:5173
+**Option B: Docker Compose (All-in-One)**
+
+```bash
+docker-compose up
+```
+
+### 3. Access the Application
+
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
 
 ## First Steps
 
-1. **Upload a Video**
-   - Open http://localhost:5173
-   - Drag and drop a video file (MP4, AVI, MOV)
-   - Wait for processing to complete (~1-2 minutes for a 5-minute video)
-
-2. **Explore Features**
-   - **Search**: Try "show me scenes with people talking"
-   - **Timeline**: Click events to jump to specific moments
-   - **Transcript**: View synchronized captions
-   - **Analysis**: Click "Run Analysis" for AI insights
-
-## Testing the API
-
-```bash
-# Check health
-curl http://localhost:8000/health
-
-# View API documentation
-open http://localhost:8000/docs
-```
-
-## Sample Queries
-
-Once your video is processed, try these semantic searches:
-
-- "Find moments where someone is smiling"
-- "Show me the introduction"
-- "When is the product demonstration?"
-- "Find scenes with music"
-- "Show me outdoor scenes"
+1. Click "Get Started" on the landing page
+2. Upload a video file (MP4, AVI, MOV, MKV)
+3. Wait for processing (transcription, scene detection)
+4. Try semantic search: "Find happy moments"
+5. Click on timeline events to navigate
+6. Run AI analysis for object detection and emotions
 
 ## Troubleshooting
 
-**Port already in use?**
+### Database Connection Error
 ```bash
-# Change ports in docker-compose.yml
-# Backend: 8000 -> 8001
-# Frontend: 5173 -> 3000
+# Restart database
+docker-compose restart db
+
+# Check if running
+docker-compose ps
 ```
 
-**Models downloading slowly?**
+### Port Already in Use
 ```bash
-# Pre-download Whisper model
+# Check what's using port 8000
+lsof -i :8000
+
+# Or change port in backend/main.py
+uvicorn.run(app, host="0.0.0.0", port=8001)
+```
+
+### Whisper Model Download Fails
+```bash
+# Pre-download model
+cd backend
+source venv/bin/activate
 python -c "import whisper; whisper.load_model('base')"
 ```
 
-**Database connection error?**
-```bash
-# Check services are running
-docker-compose ps
-
-# Restart services
-docker-compose restart
+### Out of Memory
+Edit `backend/.env`:
+```env
+WHISPER_MODEL=tiny  # Use smaller model
 ```
 
-## Next Steps
+## Configuration
 
-- Read the full [README.md](README.md) for advanced features
-- Check [API documentation](http://localhost:8000/docs)
-- Customize models in `backend/app/config.py`
-- Explore the codebase structure
+### Backend (.env)
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/videodb
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+WHISPER_MODEL=base  # Options: tiny, base, small, medium, large
+ALLOWED_ORIGINS=http://localhost:5173
+```
+
+### Frontend (.env)
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+## Model Options
+
+### Whisper Models (Speed vs Accuracy)
+- `tiny` - Fastest, lowest accuracy (~1GB RAM)
+- `base` - Good balance (~1GB RAM) **[Recommended]**
+- `small` - Better accuracy (~2GB RAM)
+- `medium` - High accuracy (~5GB RAM)
+- `large` - Best accuracy (~10GB RAM)
+
+## What Gets Processed?
+
+When you upload a video, the system automatically:
+
+1. **Extracts keyframes** every 2 seconds
+2. **Transcribes audio** with word-level timestamps
+3. **Detects scenes** and generates keyframes
+4. **Indexes content** for semantic search
+
+Then you can manually run:
+- **Object detection** (YOLOv5 - 80+ object classes)
+- **Emotion analysis** (7 emotion categories)
 
 ## Performance Tips
 
-- Use `WHISPER_MODEL=tiny` for faster transcription
-- Reduce frame extraction interval for faster processing
-- Use GPU for 10x faster object detection
-- Scale with Docker replicas for multiple users
+### For Faster Processing
+1. Use smaller Whisper model (`tiny` or `base`)
+2. Reduce frame extraction interval in code
+3. Use GPU if available (automatic with CUDA)
 
-Enjoy exploring your videos with AI! 🎬✨
+### For Better Accuracy
+1. Use larger Whisper model (`medium` or `large`)
+2. Increase frame extraction frequency
+3. Process shorter video clips
+
+## Next Steps
+
+- Read [FEATURES.md](FEATURES.md) for full feature list
+- Check [API.md](API.md) for API documentation
+- See [DEVELOPMENT.md](DEVELOPMENT.md) for development guide
+- Review [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for architecture
+
+## Support
+
+Having issues? Check:
+1. All services are running: `docker-compose ps`
+2. Backend logs: Check terminal or `docker-compose logs backend`
+3. Database is accessible: `docker-compose exec db psql -U user -d videodb`
+4. Qdrant is running: `curl http://localhost:6333/collections`
+
+## Stopping the Application
+
+```bash
+# Stop Docker services
+docker-compose down
+
+# Or just Ctrl+C in terminal windows
+```
+
+---
+
+**Ready to analyze videos with AI!** 🎬🤖
